@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timedelta
 
 class TodoItem:
@@ -8,11 +9,11 @@ class TodoItem:
             days: float|None = None,
             hours: float|None = None,
             ):
-        now = datetime.now
-        self.deadline = datetime(*deadline[::-1]) if deadline else None
-        self.days = now().date() + timedelta(days=days) if days else None
-        self.hours = now() + timedelta(hours=hours) if hours else None
+        self.deadline = datetime(*deadline[::-1]) if deadline else datetime.now()
+        self.deadline = self.deadline + timedelta(days=days) if days else self.deadline
+        self.deadline= self.deadline + timedelta(hours=hours) if hours else self.deadline
         self.task = task
         self.subtasks = []
         self.status = False
-
+    def __repr__(self):
+        return f"Deadline: {datetime.strftime(self.deadline, '%d/%m/%Y %H:%M')}\nTask: {self.task}"
