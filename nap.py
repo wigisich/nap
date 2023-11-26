@@ -41,12 +41,19 @@ class TodoItem:
         self.subtasks = []
         self.status = False
     def __repr__(self):
-        return f"Deadline: {datetime.strftime(self.deadline, '%d/%m/%Y %H:%M')}\nTask: {self.task}"
+        screen_x, screen_y = os.get_terminal_size()
+        limit_y = int(screen_x*.6)
+        limit_task = int(screen_x*.4)
+        deadline = f"{datetime.strftime(self.deadline, '%d/%m/%Y %H:%M')}"
+        cut = True if len(self.task)>limit_task else False
+        task = self.task[: limit_task-3 if cut else None] + "..." if cut else self.task
+        task = "[ " + task.center(limit_y, " ") + " ]"
+        return task
 
     def add_subtask(self, subtask):
         self.subtasks.append(subtask)
 
-naps = [TodoItem(task="Task to do"), TodoItem(task="Another task to do...")]
+naps = [TodoItem(task="Task to do"), TodoItem(task="Another very very long task to do and it is so long that I don't know what to do with this task which implies that I need a professional help from who knows how to do this task especially when you know nothing about how to do the task within a short time of period that is either lower than at least on hour or maybe two.")]
 
 if __name__ == "__main__":
     if not config:
