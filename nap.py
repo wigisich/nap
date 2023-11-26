@@ -48,7 +48,21 @@ class TodoItem:
     def add_subtask(self, subtask):
         self.subtasks.append(subtask)
 
+    def display(self):
+        x, y = os.get_terminal_size()
+        limit_task = int(x*.4)
+        limit_x = int(x*.6)
+        cut = True if len(self.task)>limit_task else False
+        task = self.task[:limit_task if cut else None]+"..." if cut else self.task
+        task = f"[ {task} ]"
+        return task
+
 naps = [TodoItem(task="Task to do"), TodoItem(task="Another very very long task to do and it is so long that I don't know what to do with this task which implies that I need a professional help from who knows how to do this task especially when you know nothing about how to do the task within a short time of period that is either lower than at least on hour or maybe two.")]
+
+def nap_display():
+    for n in naps:
+        n.display()
+
 
 if __name__ == "__main__":
     if not config:
