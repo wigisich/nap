@@ -30,6 +30,7 @@ class TodoItem:
     def __init__(
             self,
             task: str,
+            subtasks: list = [],
             deadline: tuple[int]|None = None, # dd-mm-yyyy
             days: float|None = None,
             hours: float|None = None,
@@ -38,7 +39,7 @@ class TodoItem:
         self.deadline = self.deadline + timedelta(days=days) if days else self.deadline
         self.deadline = self.deadline + timedelta(hours=hours) if hours else self.deadline
         self.task = task
-        self.subtasks = []
+        self.subtasks = subtasks
         self.status = False
     def __repr__(self):
         limit = 12
@@ -48,16 +49,22 @@ class TodoItem:
     def add_subtask(self, subtask):
         self.subtasks.append(subtask)
 
-    def display(self):
+    def display(self, subtasks=False):
         x, y = os.get_terminal_size()
         limit_task = int(x*.4)
         limit_x = int(x*.6)
         cut = True if len(self.task)>limit_task else False
         task = self.task[:limit_task if cut else None]+"..." if cut else self.task
-        task = f"[ {task} ]"
+        task = f"[ {task} ]\n"
+        if subtasks:
+            for subtask in self.subtasks:
+                cut = True if len(subtask)>limit_task else False
+                subtask = subtask[:limit_task if cut else None]+"..." if cut else subtask
+                subtask = f" - [ {subtask} ]\n"
+                task = task + subtask
         return task
 
-naps = [TodoItem(task="Task to do"), TodoItem(task="Another very very long task to do and it is so long that I don't know what to do with this task which implies that I need a professional help from who knows how to do this task especially when you know nothing about how to do the task within a short time of period that is either lower than at least on hour or maybe two.")]
+naps = [TodoItem(task="Task to do", subtasks=["asdasdasdasdasdasdaasd asd asdas dasda sdas dasdasd asda sda sdasdasd ", "qweqew qwe qwe qewqweqwe qweq qweqwe qweqweqwe qweqweqw eqwqwe qweqweqwe"]), TodoItem(task="Another very very long task to do and it is so long that I don't know what to do with this task which implies that I need a professional help from who knows how to do this task especially when you know nothing about how to do the task within a short time of period that is either lower than at least on hour or maybe two.")]
 
 def nap_display():
     for n in naps:
