@@ -38,6 +38,7 @@ class TodoItem:
         self.deadline = datetime.strptime(deadline, "%d-%m-%Y") if deadline else datetime.now()
         self.deadline = self.deadline + timedelta(days=days) if days else self.deadline
         self.deadline = self.deadline + timedelta(hours=hours) if hours else self.deadline
+        #self.id should be constructed using other items
         self.task = task
         self.subtasks = subtasks
         self.status = False
