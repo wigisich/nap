@@ -57,16 +57,16 @@ class TodoItem:
         limit_x = int(x*.6)
         cut = True if len(self.task)>limit_task else False
         task = self.task[:limit_task if cut else None]+"..." if cut else self.task
-        task = f"[ {task} ({self.idx})]\n"
+        task = f"[{self.deadline.strftime('%d-%m-%Y')}] - [ {task} ({self.idx})]\n"
         if subtasks:
             for idx, subtask in enumerate(self.subtasks):
                 cut = True if len(subtask)>limit_task else False
                 subtask = subtask[:limit_task if cut else None]+"..." if cut else subtask
-                subtask = f" - [ {subtask} ({idx})]\n"
+                subtask = f"\t\t - [ {subtask} ({idx})]\n"
                 task = task + subtask
         return task
 
-naps = [TodoItem(idx=0, task="Task to do", subtasks=["asdasdasdasdasdasdaasd asd asdas dasda sdas dasdasd asda sda sdasdasd ", "qweqew qwe qwe qewqweqwe qweq qweqwe qweqweqwe qweqweqw eqwqwe qweqweqwe"]), TodoItem(idx=1, task="Another very very long task to do and it is so long that I don't know what to do with this task which implies that I need a professional help from who knows how to do this task especially when you know nothing about how to do the task within a short time of period that is either lower than at least on hour or maybe two.")]
+naps = [TodoItem(idx=0, deadline="12-12-2022", task="Task to do", subtasks=["asdasdasdasdasdasdaasd asd asdas dasda sdas dasdasd asda sda sdasdasd ", "qweqew qwe qwe qewqweqwe qweq qweqwe qweqweqwe qweqweqw eqwqwe qweqweqwe"]), TodoItem(idx=1, task="Another very very long task to do and it is so long that I don't know what to do with this task which implies that I need a professional help from who knows how to do this task especially when you know nothing about how to do the task within a short time of period that is either lower than at least on hour or maybe two.")]
 
 def display_naps(naps):
     print("\n__naps__:\n---------\n")
@@ -76,23 +76,6 @@ def display_naps(naps):
 
 if __name__ == "__main__":
         display_naps(naps)
-
-#  __naps__:
-#  ---------
-#  [ Bir şeyler yapmamız gerekiyor... (24) ]   [ 24/11/2023 ]
-#   - [ Alt işlerden biri (13) ]
-#   - [ Alt işlerden diğeri (42) ]
-#
-#  __fnaps__:
-#  ----------
-#  [ sdgfsdfg sdgf sdfg sdfg (54) ]
-#  [ gergegw wgfwertgw gwgwe (77) ]
-#  ...
-#
-
-
-
-
 
 
 
