@@ -26,7 +26,7 @@ parser.add_argument("-fn", "--fnaps", help="finished naps")
 args = parser.parse_args()
 config = vars(args)
 
-class TodoItem:
+class Nap:
     def __init__(
             self,
             idx: int,
@@ -61,12 +61,12 @@ class TodoItem:
         if subtasks:
             for idx, subtask in enumerate(self.subtasks):
                 cut = True if len(subtask)>limit_task else False
-                subtask = subtask[:limit_task if cut else None]+"..." if cut else subtask
+                subtask = subtask[:limit_task-4 if cut else None]+"..." if cut else subtask
                 subtask = f"\t\t - [ {subtask} ({idx})]\n"
                 task = task + subtask
         return task
 
-naps = [TodoItem(idx=0, deadline="12-12-2022", task="Task to do", subtasks=["asdasdasdasdasdasdaasd asd asdas dasda sdas dasdasd asda sda sdasdasd ", "qweqew qwe qwe qewqweqwe qweq qweqwe qweqweqwe qweqweqw eqwqwe qweqweqwe"]), TodoItem(idx=1, task="Another very very long task to do and it is so long that I don't know what to do with this task which implies that I need a professional help from who knows how to do this task especially when you know nothing about how to do the task within a short time of period that is either lower than at least on hour or maybe two.")]
+naps = [Nap(idx=0, deadline="12-12-2022", task="Task to do", subtasks=["asdasdasdasdasdasdaasd asd asdas dasda sdas dasdasd asda sda sdasdasd ", "qweqew qwe qwe qewqweqwe qweq qweqwe qweqweqwe qweqweqw eqwqwe qweqweqwe"]), Nap(idx=1, task="Another very very long task to do and it is so long that I don't know what to do with this task which implies that I need a professional help from who knows how to do this task especially when you know nothing about how to do the task within a short time of period that is either lower than at least on hour or maybe two.")]
 
 def display_naps(naps):
     print("\n__naps__:\n---------\n")
@@ -75,6 +75,9 @@ def display_naps(naps):
 
 
 if __name__ == "__main__":
+    display_naps(naps)
+    if config["sort"]:
+        naps = sorted(naps, key=lambda x: x.deadline, reverse=True)
         display_naps(naps)
 
 
