@@ -29,6 +29,7 @@ config = vars(args)
 class TodoItem:
     def __init__(
             self,
+            idx: int,
             task: str,
             subtasks: list = [],
             deadline: tuple[int]|None = None, # dd-mm-yyyy
@@ -38,7 +39,7 @@ class TodoItem:
         self.deadline = datetime.strptime(deadline, "%d-%m-%Y") if deadline else datetime.now()
         self.deadline = self.deadline + timedelta(days=days) if days else self.deadline
         self.deadline = self.deadline + timedelta(hours=hours) if hours else self.deadline
-        #self.id should be constructed using other items
+        self.idx = idx
         self.task = task
         self.subtasks = subtasks
         self.status = False
@@ -56,25 +57,25 @@ class TodoItem:
         limit_x = int(x*.6)
         cut = True if len(self.task)>limit_task else False
         task = self.task[:limit_task if cut else None]+"..." if cut else self.task
-        task = f"[ {task} ]\n"
+        task = f"[ {task} ({self.idx})]\n"
         if subtasks:
-            for subtask in self.subtasks:
+            for idx, subtask in enumerate(self.subtasks):
                 cut = True if len(subtask)>limit_task else False
                 subtask = subtask[:limit_task if cut else None]+"..." if cut else subtask
-                subtask = f" - [ {subtask} ]\n"
+                subtask = f" - [ {subtask} ({idx})]\n"
                 task = task + subtask
         return task
 
-naps = [TodoItem(task="Task to do", subtasks=["asdasdasdasdasdasdaasd asd asdas dasda sdas dasdasd asda sda sdasdasd ", "qweqew qwe qwe qewqweqwe qweq qweqwe qweqweqwe qweqweqw eqwqwe qweqweqwe"]), TodoItem(task="Another very very long task to do and it is so long that I don't know what to do with this task which implies that I need a professional help from who knows how to do this task especially when you know nothing about how to do the task within a short time of period that is either lower than at least on hour or maybe two.")]
+naps = [TodoItem(idx=0, task="Task to do", subtasks=["asdasdasdasdasdasdaasd asd asdas dasda sdas dasdasd asda sda sdasdasd ", "qweqew qwe qwe qewqweqwe qweq qweqwe qweqweqwe qweqweqw eqwqwe qweqweqwe"]), TodoItem(idx=1, task="Another very very long task to do and it is so long that I don't know what to do with this task which implies that I need a professional help from who knows how to do this task especially when you know nothing about how to do the task within a short time of period that is either lower than at least on hour or maybe two.")]
 
-def nap_display():
+def display_naps(naps):
+    print("\n__naps__:\n---------\n")
     for n in naps:
-        n.display()
+        print(n.display(subtasks=True))
 
 
 if __name__ == "__main__":
-    if not config:
-        nap_display()
+        display_naps(naps)
 
 #  __naps__:
 #  ---------
