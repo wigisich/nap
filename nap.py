@@ -42,7 +42,7 @@ class Nap:
         self.idx = idx
         self.task = task
         self.subtasks = subtasks
-        self.status = False
+        self.status = True
     def __repr__(self):
         limit = 12
         task = self.task[:limit if len(self.task)>limit else None] + "..." if len(self.task)>limit else self.task
@@ -79,6 +79,4 @@ if __name__ == "__main__":
     if config["sort"]:
         naps = sorted(naps, key=lambda x: x.deadline, reverse=True)
         display_naps(naps)
-
-
 
