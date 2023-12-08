@@ -18,11 +18,10 @@ parser.add_argument("-t", "--task", help="select a task")
 parser.add_argument("-st", "--subtask", help="select a subtask of a task")
 
 parser.add_argument("-c", "--check", action="store_true", help="check a task")
-parser.add_argument("-u", "--uncheck", action="store_true", help="uncheck a task")
 parser.add_argument("-del", "--delete", action="store_true", help="delete a task")
 
 parser.add_argument("-s", "--sort", action="store_true", help="sort by date")
-parser.add_argument("-i", "--important", action="store_true", help="highlight & pick the task to the top")
+#parser.add_argument("-i", "--important", action="store_true", help="highlight & pick the task to the top")
 
 parser.add_argument("-fn", "--fnaps", help="finished naps")
 
@@ -35,8 +34,6 @@ print(config)
 class Nap:
     def __init__(self, **kwargs):
         self.deadline = datetime.strptime(kwargs["deadline"], "%d-%m-%Y") if kwargs["deadline"] else datetime.now()
-        self.deadline = self.deadline + timedelta(days=float(kwargs["days"])) if kwargs["days"] else self.deadline
-        self.deadline = self.deadline + timedelta(hours=float(kwargs["hours"])) if kwargs["hours"] else self.deadline
         self.task =  kwargs["add_task"]
         self.subtasks = kwargs["add_subtask"]
         self.status = True
@@ -54,16 +51,17 @@ class Nap:
         limit_x = int(x*.6)
         cut = True if len(self.task)>limit_task else False
         task = self.task[:limit_task if cut else None]+"..." if cut else self.task
-        task = f"  [{self.deadline.strftime('%d-%m-%Y')}] - [ {task} ({idx})]\n"
-        if subtasks:
+        task = f"  [{self.deadline.strftime('%d-%m-%Y %H:%M')}]\n  ------------------\n   - [ {task} ({idx})]\n"
+        if subtasks and self.subtasks:
             for i, subtask in enumerate(self.subtasks):
                 cut = True if len(subtask)>limit_task else False
                 subtask = subtask[:limit_task-4 if cut else None]+"..." if cut else subtask
-                subtask = f"  \t\t - [ {subtask} ({i})]\n"
+                subtask = f"\t - [ {subtask} ({i})]\n"
                 task = task + subtask
         return task
 
-naps = [Nap(add_task="Some task", add_subtask=["subtask1", "subtask2"], deadline=None, hours=None, days=None), Nap(add_task="Some task", add_subtask=["subtask1", "subtask2"], deadline=None, hours=None, days=None)]
+naps = [Nap(add_task="Some task", add_subtask=["subtask1", "subtask2"], deadline=None), Nap(add_task="Some task", add_subtask=["subtask1", "subtask2"], deadline=None)]
+fnaps = []
 
 def display_naps(naps):
     print("\n__naps__:\n---------\n")
@@ -73,11 +71,19 @@ def display_naps(naps):
 if __name__ == "__main__":
     if config["add_task"]:
         nap = Nap(**config)
+        if config["days"]: nap.deadline += timedelta(days=float(config["days"]))
+        if config["hours"]: nap.deadline += timedelta(hours=float(config["hours"]))
         naps.append(nap)
-    if config["check"]:
-        idx = int(config["task"])
-        naps[idx].status = not naps[idx].status
-    display_naps(naps)
+    if config["task"]:
+        task_id = int(config["task"])
+
+        if config["check"]:
+            if not config["subtask"]:
+                naps[task_id].status = not naps[task_id].status
+        # if only task_id, display nap
+
+    display_naps(sorted(naps, key=lambda x: x.deadline)) if config["sort"] else display_naps(naps)
 
 
-
+#self.deadline = self.deadline + timedelta(days=float(kwargs["days"])) if kwargs["days"] else self.deadline
+#self.deadline = self.deadline + timedelta(hours=float(kwargs["hours"])) if kwargs["hours"] else self.deadline
