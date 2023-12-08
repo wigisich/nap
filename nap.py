@@ -37,7 +37,6 @@ class Nap:
         self.deadline = datetime.strptime(kwargs["deadline"], "%d-%m-%Y") if kwargs["deadline"] else datetime.now()
         self.deadline = self.deadline + timedelta(days=float(kwargs["days"])) if kwargs["days"] else self.deadline
         self.deadline = self.deadline + timedelta(hours=float(kwargs["hours"])) if kwargs["hours"] else self.deadline
-        self.idx = 0
         self.task =  kwargs["add_task"]
         self.subtasks = kwargs["add_subtask"]
         self.status = True
@@ -49,33 +48,35 @@ class Nap:
     def add_subtask(self, subtask):
         self.subtasks.append(subtask)
 
-    def display(self, subtasks=False):
+    def display(self, idx, subtasks=False):
         x, y = os.get_terminal_size()
         limit_task = int(x*.4)
         limit_x = int(x*.6)
         cut = True if len(self.task)>limit_task else False
         task = self.task[:limit_task if cut else None]+"..." if cut else self.task
-        task = f"  [{self.deadline.strftime('%d-%m-%Y')}] - [ {task} ({self.idx})]\n"
+        task = f"  [{self.deadline.strftime('%d-%m-%Y')}] - [ {task} ({idx})]\n"
         if subtasks:
-            for idx, subtask in enumerate(self.subtasks):
+            for i, subtask in enumerate(self.subtasks):
                 cut = True if len(subtask)>limit_task else False
                 subtask = subtask[:limit_task-4 if cut else None]+"..." if cut else subtask
-                subtask = f"  \t\t - [ {subtask} ({idx})]\n"
+                subtask = f"  \t\t - [ {subtask} ({i})]\n"
                 task = task + subtask
         return task
 
-naps = [Nap(days=None, hours=None, idx=0, deadline="12-12-2022", add_task="Task to do", add_subtask=["asdasdasdasdasdasdaasd asd asdas dasda sdas dasdasd asda sda sdasdasd ", "qweqew qwe qwe qewqweqwe qweq qweqwe qweqweqwe qweqweqw eqwqwe qweqweqwe"]), Nap(days=None, add_subtask=[], hours=None, idx=1, deadline=None, add_task="Another very very long task to do and it is so long that I don't know what to do with this task which implies that I need a professional help from who knows how to do this task especially when you know nothing about how to do the task within a short time of period that is either lower than at least on hour or maybe two.")]
+naps = [Nap(add_task="Some task", add_subtask=["subtask1", "subtask2"], deadline=None, hours=None, days=None), Nap(add_task="Some task", add_subtask=["subtask1", "subtask2"], deadline=None, hours=None, days=None)]
 
 def display_naps(naps):
     print("\n__naps__:\n---------\n")
-    for n in naps:
-        print(n.display(subtasks=True))
-
+    for idx, n in enumerate(naps):
+        if n.status: print(n.display(idx=idx, subtasks=True))
 
 if __name__ == "__main__":
     if config["add_task"]:
         nap = Nap(**config)
         naps.append(nap)
+    if config["check"]:
+        idx = int(config["task"])
+        naps[idx].status = not naps[idx].status
     display_naps(naps)
 
 
