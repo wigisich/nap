@@ -75,12 +75,12 @@ if __name__ == "__main__":
         if config["hours"]: nap.deadline += timedelta(hours=float(config["hours"]))
         naps.append(nap)
     if config["task"]:
-        task_id = int(config["task"])
-
-        if config["check"]:
+        nap_id = int(config["task"])
+        if config["delete"]: naps.pop(nap_id)
+        elif config["check"]:
             if not config["subtask"]:
-                naps[task_id].status = not naps[task_id].status
-        # if only task_id, display nap
+                naps[task_id].status = not naps[nap_id].status
+        # if only nap_id, display the nap instead of naps
 
     display_naps(sorted(naps, key=lambda x: x.deadline)) if config["sort"] else display_naps(naps)
 
